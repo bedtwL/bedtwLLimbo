@@ -1,0 +1,8 @@
+name: bedtwLLimbo
+version: '${project.version}'
+main: me.bedtwl.bedtwllimbo.BedtwLLimbo
+author: bedtwL
+commands:
+  setlobby:
+    description: Set Lobby Location
+    usage: /setlobby
