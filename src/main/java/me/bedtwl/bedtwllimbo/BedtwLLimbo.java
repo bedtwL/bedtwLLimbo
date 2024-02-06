@@ -2,12 +2,9 @@ package me.bedtwl.bedtwllimbo;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.server.v1_8_R3.ChatComponentText;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -24,10 +21,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 
 public final class BedtwLLimbo extends JavaPlugin implements Listener {
 
@@ -62,8 +57,9 @@ public final class BedtwLLimbo extends JavaPlugin implements Listener {
 
         CraftPlayer craftPlayer = (CraftPlayer) player;
 
-        IChatBaseComponent titleComponent = IChatBaseComponent.ChatSerializer.a("{\"text\":\"You are AFK\",\"color\":\"red\"}");
-        IChatBaseComponent subtitleComponent = IChatBaseComponent.ChatSerializer.a("{\"text\":\"Move around to return Lobby\",\"color\":\"yellow\"}");
+        IChatBaseComponent titleComponent= IChatBaseComponent.ChatSerializer.a("{\"text\":\"You are AFK\",\"color\":\"red\"}");
+        IChatBaseComponent subtitleComponent=IChatBaseComponent.ChatSerializer.a("{\"text\":\"Move around to return Lobby\",\"color\":\"yellow\"}");
+
 
         PacketPlayOutTitle packetTitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE,
                 titleComponent, 0, 60, 0);
@@ -126,7 +122,7 @@ public final class BedtwLLimbo extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerLeft(PlayerQuitEvent e)
     {
-        e.setQuitMessage(null);
+        Sending.remove(e.getPlayer());e.setQuitMessage(null);
     }
 
     @EventHandler
@@ -135,8 +131,12 @@ public final class BedtwLLimbo extends JavaPlugin implements Listener {
         SendPlayerToLobby(e.getPlayer());
     }
 
+    ArrayList<Player> Sending=new ArrayList<>();
     public void SendPlayerToLobby(Player p)
     {
+        if (Sending.contains(p))
+            return;
+        Sending.add(p);
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(getConfig().getString("lobby-server"));
