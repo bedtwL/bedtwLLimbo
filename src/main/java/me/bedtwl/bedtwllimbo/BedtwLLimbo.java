@@ -86,7 +86,7 @@ public final class BedtwLLimbo extends JavaPlugin implements Listener {
         if (spawnlocation!=null)
            e.getPlayer().teleport(spawnlocation);
         for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-            p.hidePlayer(p);
+            p.hidePlayer(e.getPlayer());
             e.getPlayer().hidePlayer(p);
         }
     }
